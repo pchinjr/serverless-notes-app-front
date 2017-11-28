@@ -1,42 +1,21 @@
-import React, { Component } from 'react';
-import { Button, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import './Login.css';
-import config from '../config';
+import React, { Component } from "react";
 import {
   CognitoUserPool,
   AuthenticationDetails,
   CognitoUser
-} from 'amazon-cognito-identity-js';
+} from "amazon-cognito-identity-js";
+import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import config from "../config";
+import "./Login.css";
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      email: ' ',
-      password: ' '
+      email: "",
+      password: ""
     };
-  }
-
-  validateForm() {
-    return this.state.email.length > 0 && this.state.password.length > 0;
-  }
-
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
-  }
-
-  handleSubmit = async event => {
-    event.preventDefault();
-
-    try {
-      await this.login(this.state.email, this.state.password);
-      alert('logged in');
-    } catch(e) {
-      alert(e);
-    }
   }
 
   login(email, password) {
@@ -54,6 +33,27 @@ export default class Login extends Component {
         onFailure: err => reject(err)
       })
     );
+  }
+
+  validateForm() {
+    return this.state.email.length > 0 && this.state.password.length > 0;
+  }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+  }
+
+  handleSubmit = async event => {
+    event.preventDefault();
+
+    try {
+      await this.login(this.state.email, this.state.password);
+      this.props.userHasAuthenticated(true);
+    } catch (e) {
+      alert(e);
+    }
   }
 
   render() {
